@@ -1,0 +1,26 @@
+# 1vs5 Configuration
+
+lobby:
+  world: "lobby"
+  spawn:
+    x: 0.5
+    y: 3.0
+    z: 0.5
+    yaw: 0.0
+    pitch: 0.0
+
+fightworld:
+  world: "fightworld"
+  solo_spawn:
+    x: 20667.5
+    y: 148.0
+    z: 15615.5
+  attackers_spawn:
+    x: 20803.5
+    y: 148.0
+    z: 15615.5
+
+game:
+  default_rounds: 3
+  countdown_seconds: 5
+  post_round_delay_seconds: 5

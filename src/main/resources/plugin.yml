@@ -1,0 +1,13 @@
+name: 1vs5
+version: 1.0-SNAPSHOT
+main: therohero.onevsfive.OneVsFive
+api-version: '1.21'
+author: Ruben
+description: A 1vs5 Minecraft Plugin with point system and friendly fire rules.
+commands:
+  1vs5:
+    description: Control the 1vs5 event.
+    usage: /1vs5 <setsolo|addattacker|removeattacker|rounds|savekit|setkit|deletekit|toggledrops|start|stop|resetleaderboard|points>
+  spectatefight:
+    description: Observe the ongoing fight.
+    usage: /spectatefight
