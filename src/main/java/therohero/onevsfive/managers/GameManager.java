@@ -16,6 +16,7 @@ public class GameManager {
     private final Plugin plugin;
     private final PointManager pointManager;
     private final WorldManager worldManager;
+    private final LangManager lang;
     private final KitManager kitManager;
     private final ScoreboardManager scoreboardManager;
 
@@ -32,10 +33,11 @@ public class GameManager {
 
     private final Map<Location, UUID> explosionSources = new HashMap<>();
 
-    public GameManager(Plugin plugin, PointManager pointManager, WorldManager worldManager) {
+    public GameManager(Plugin plugin, PointManager pointManager, WorldManager worldManager, LangManager lang) {
         this.plugin = plugin;
         this.pointManager = pointManager;
         this.worldManager = worldManager;
+        this.lang = lang;
         this.kitManager = new KitManager(plugin);
         this.scoreboardManager = new ScoreboardManager(this, pointManager);
 
@@ -77,19 +79,16 @@ public class GameManager {
 
     public void startMatch() {
         if (selectedKit == null) {
-            Bukkit.broadcast(
-                    Component.text("Match kann nicht gestartet werden: Kein Kit festgelegt!", NamedTextColor.RED));
+            Bukkit.broadcast(Component.text(lang.get("match_cannot_start_no_kit"), NamedTextColor.RED));
             return;
         }
         if (!kitManager.kitExists(selectedKit)) {
             Bukkit.broadcast(
-                    Component.text("Match kann nicht gestartet werden: Kit '" + selectedKit + "' existiert nicht mehr!",
-                            NamedTextColor.RED));
+                    Component.text(lang.get("match_cannot_start_kit_missing", selectedKit), NamedTextColor.RED));
             return;
         }
         if (soloPlayer == null || attackers.isEmpty()) {
-            Bukkit.broadcast(Component.text("Match kann nicht gestartet werden: Solo oder Angreifer fehlen!",
-                    NamedTextColor.RED));
+            Bukkit.broadcast(Component.text(lang.get("match_cannot_start_no_players"), NamedTextColor.RED));
             return;
         }
         currentRound = 0;
@@ -99,18 +98,15 @@ public class GameManager {
     }
 
     private void sendMatchIntroduction() {
-        Component rules = Component.text("--- 1vs5 REGELN ---", NamedTextColor.GOLD, TextDecoration.BOLD)
+        Component rules = Component.text(lang.get("rules_header"), NamedTextColor.GOLD, TextDecoration.BOLD)
                 .append(Component.newline())
-                .append(Component.text("1. Der Solo-Spieler kämpft gegen das Team.", NamedTextColor.YELLOW))
+                .append(Component.text(lang.get("rules_line1"), NamedTextColor.YELLOW))
                 .append(Component.newline())
-                .append(Component.text("2. Friendly Fire zwischen Angreifern (Nahkampf & Explosionen) ist deaktiviert.",
-                        NamedTextColor.YELLOW))
+                .append(Component.text(lang.get("rules_line2"), NamedTextColor.YELLOW))
                 .append(Component.newline())
-                .append(Component.text(
-                        "3. Punkte: Solo-Kill (10 Pkt), Überleben als Angreifer (5 Pkt), Tod-Reihenfolge (1-5 Pkt).",
-                        NamedTextColor.YELLOW))
+                .append(Component.text(lang.get("rules_line3"), NamedTextColor.YELLOW))
                 .append(Component.newline())
-                .append(Component.text("Viel Erfolg!", NamedTextColor.GREEN));
+                .append(Component.text(lang.get("rules_footer"), NamedTextColor.GREEN));
         Bukkit.broadcast(rules);
     }
 
@@ -124,12 +120,11 @@ public class GameManager {
         gameRunning = false;
         explosionSources.clear();
 
-        Bukkit.broadcast(Component.text("Runde " + currentRound + " von " + totalRounds + " wird vorbereitet...",
-                NamedTextColor.YELLOW));
+        Bukkit.broadcast(Component.text(lang.get("round_preparing", currentRound, totalRounds), NamedTextColor.YELLOW));
 
         worldManager.resetArena().thenAccept(success -> {
             if (!success) {
-                Bukkit.broadcast(Component.text("Fehler beim Zurücksetzen der Arena!", NamedTextColor.RED));
+                Bukkit.broadcast(Component.text(lang.get("match_reset_failed"), NamedTextColor.RED));
                 return;
             }
 
@@ -192,7 +187,7 @@ public class GameManager {
             @Override
             public void run() {
                 if (seconds > 0) {
-                    Component msg = Component.text("Start in " + seconds + "...", NamedTextColor.GOLD,
+                    Component msg = Component.text(lang.get("countdown_tick", seconds), NamedTextColor.GOLD,
                             TextDecoration.BOLD);
                     Bukkit.broadcast(msg);
                     for (Player p : Bukkit.getOnlinePlayers()) {
@@ -204,7 +199,8 @@ public class GameManager {
                 } else {
                     isCountingDown = false;
                     gameRunning = true;
-                    Bukkit.broadcast(Component.text("GO!", NamedTextColor.GREEN, TextDecoration.BOLD));
+                    Bukkit.broadcast(
+                            Component.text(lang.get("match_start"), NamedTextColor.GREEN, TextDecoration.BOLD));
                 }
             }
         }.run();
@@ -218,8 +214,11 @@ public class GameManager {
             if (killerUuid != null && attackers.contains(killerUuid)) {
                 pointManager.addPoints(killerUuid, 10);
                 String killerName = Bukkit.getOfflinePlayer(killerUuid).getName();
-                Bukkit.broadcast(Component.text((killerName != null ? killerName : "Ein Angreifer")
-                        + " hat den Solo-Spieler eliminiert! (+10 Pkt)", NamedTextColor.GOLD));
+                Bukkit.broadcast(Component.text(
+                        killerName != null
+                                ? lang.get("round_attacker_killed_solo", killerName)
+                                : lang.get("round_attacker_killed_solo_unknown"),
+                        NamedTextColor.GOLD));
             }
 
             for (UUID attackerId : aliveAttackers) {
@@ -228,7 +227,7 @@ public class GameManager {
                 }
             }
 
-            Bukkit.broadcast(Component.text("Der Solo-Spieler ist tot! Runde beendet.", NamedTextColor.RED));
+            Bukkit.broadcast(Component.text(lang.get("round_solo_died"), NamedTextColor.RED));
             endRound();
         } else if (attackers.contains(victimUuid)) {
             if (aliveAttackers.remove(victimUuid)) {
@@ -236,19 +235,18 @@ public class GameManager {
                     pointManager.addPoints(soloPlayer, 1);
                     Player soloP = Bukkit.getPlayer(soloPlayer);
                     if (soloP != null)
-                        soloP.sendMessage(Component.text("Gegner eliminiert! (+1 Punkt)", NamedTextColor.GOLD));
+                        soloP.sendMessage(Component.text(lang.get("solo_kill_attacker"), NamedTextColor.GOLD));
                 }
 
                 int points = (attackers.size() - aliveAttackers.size());
                 pointManager.addPoints(victimUuid, points);
                 Player p = Bukkit.getPlayer(victimUuid);
                 if (p != null)
-                    p.sendMessage(Component.text("Du erhältst " + points + " Punkt(e).", NamedTextColor.YELLOW));
+                    p.sendMessage(Component.text(lang.get("attacker_death_points", points), NamedTextColor.YELLOW));
             }
 
             if (aliveAttackers.isEmpty()) {
-                Bukkit.broadcast(Component.text("Alle Angreifer sind tot! Der Solo-Spieler gewinnt die Runde! (+7 Pkt)",
-                        NamedTextColor.GREEN));
+                Bukkit.broadcast(Component.text(lang.get("round_all_attackers_dead"), NamedTextColor.GREEN));
                 pointManager.addPoints(soloPlayer, 7);
                 endRound();
             }
@@ -273,13 +271,11 @@ public class GameManager {
             player.getInventory().clear();
 
             if (uuid.equals(soloPlayer)) {
-                Bukkit.broadcast(
-                        Component.text("Der Solo-Spieler hat das Spiel verlassen! Runde beendet.", NamedTextColor.RED));
+                Bukkit.broadcast(Component.text(lang.get("quit_solo"), NamedTextColor.RED));
                 endRound();
             } else if (aliveAttackers.remove(uuid)) {
                 if (aliveAttackers.isEmpty()) {
-                    Bukkit.broadcast(Component.text("Alle Angreifer sind weg! Der Solo-Spieler gewinnt die Runde!",
-                            NamedTextColor.GREEN));
+                    Bukkit.broadcast(Component.text(lang.get("quit_attackers_all_gone"), NamedTextColor.GREEN));
                     pointManager.addPoints(soloPlayer, 7);
                     endRound();
                 }
@@ -298,7 +294,7 @@ public class GameManager {
         isCountingDown = false;
         combatLoggers.clear();
 
-        Bukkit.broadcast(Component.text("Das Match ist beendet!", NamedTextColor.GOLD, TextDecoration.BOLD));
+        Bukkit.broadcast(Component.text(lang.get("match_over"), NamedTextColor.GOLD, TextDecoration.BOLD));
         pointManager.displayLeaderboard();
         pointManager.recordHistory("Match mit Kit: " + (selectedKit != null ? selectedKit : "Keins"));
 
@@ -321,7 +317,7 @@ public class GameManager {
         gameRunning = false;
         isCountingDown = false;
         combatLoggers.clear();
-        Bukkit.broadcast(Component.text("Match wurde abgebrochen.", NamedTextColor.RED));
+        Bukkit.broadcast(Component.text(lang.get("match_stopped"), NamedTextColor.RED));
 
         World lobby = Bukkit.getWorld(plugin.getConfig().getString("lobby.world", "lobby"));
         Location lobbySpawn = getLocationFromConfig("lobby.spawn", lobby);
@@ -352,7 +348,7 @@ public class GameManager {
     public void spectateFight(Player player) {
         World fightWorld = Bukkit.getWorld(plugin.getConfig().getString("fightworld.world", "fightworld"));
         if (fightWorld == null) {
-            player.sendMessage(Component.text("Die Fightworld ist aktuell nicht geladen!", NamedTextColor.RED));
+            player.sendMessage(Component.text(lang.get("spectate_fightworld_not_loaded"), NamedTextColor.RED));
             return;
         }
         player.setGameMode(GameMode.SPECTATOR);
@@ -364,8 +360,7 @@ public class GameManager {
             player.teleport(fightWorld.getSpawnLocation());
         }
 
-        player.sendMessage(
-                Component.text("Du schaust dem Kampf nun zu (Teleport zum Solo-Spieler).", NamedTextColor.GRAY));
+        player.sendMessage(Component.text(lang.get("spectate_success"), NamedTextColor.GRAY));
     }
 
     public boolean isCombatLogger(UUID uuid) {

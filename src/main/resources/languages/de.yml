@@ -1,0 +1,94 @@
+# 1vs5 Sprachdatei - Deutsch
+
+# Allgemein
+no_permission: "Keine Berechtigung!"
+players_only: "Nur Spieler können diesen Befehl nutzen!"
+
+# SpectateCommand
+spectate_not_allowed: "Du kannst nicht zuschauen, während du aktiv am Kampf teilnimmst!"
+
+# LobbyListener
+combat_log_message: "Du hast während eines Kampfes das Spiel verlassen (Combat-Log)!"
+match_already_running: "Es läuft bereits ein Match. Bitte warte in der Lobby!"
+join_message_running: " ist beigetreten. Er wartet in der Lobby, da bereits ein Match läuft."
+join_message_normal: " ist der Lobby beigetreten."
+
+# AdminCommand
+cmd_set_solo: "%s ist jetzt der Solo-Spieler."
+cmd_add_attacker: "%s wurde als Angreifer hinzugefügt."
+cmd_remove_attacker: "%s wurde als Angreifer entfernt."
+cmd_set_rounds: "Rundenanzahl auf %d gesetzt."
+cmd_invalid_number: "Ungültige Zahl!"
+cmd_players_only_kit: "Nur Spieler können Kits speichern!"
+cmd_kit_saved: "Kit '%s' gespeichert."
+cmd_kit_saved_regen: "Kit '%s' gespeichert (natürliche Regeneration: AN)."
+cmd_kit_save_error: "Fehler beim Speichern des Kits!"
+cmd_kit_set: "Kit '%s' wird für das nächste Match verwendet."
+cmd_kit_not_found: "Kit '%s' existiert nicht!"
+cmd_kit_deleted: "Kit '%s' wurde gelöscht."
+cmd_kit_delete_not_found: "Kit '%s' konnte nicht gefunden werden."
+cmd_drops_on: "Item-Drops beim Tod: AN"
+cmd_drops_off: "Item-Drops beim Tod: AUS"
+cmd_leaderboard_reset: "Leaderboard wurde zurückgesetzt."
+cmd_config_reloaded: "Konfiguration wurde neu geladen."
+
+# AdminCommand Hilfe
+help_header: "--- 1vs5 Admin-Hilfe ---"
+help_setsolo: "/1vs5 setsolo <Name>"
+help_addattacker: "/1vs5 addattacker <Name>"
+help_removeattacker: "/1vs5 removeattacker <Name>"
+help_rounds: "/1vs5 rounds <Anzahl>"
+help_savekit: "/1vs5 savekit <Name> [regen]"
+help_setkit: "/1vs5 setkit <Name>"
+help_deletekit: "/1vs5 deletekit <Name>"
+help_toggledrops: "/1vs5 toggledrops"
+help_start: "/1vs5 start"
+help_stop: "/1vs5 stop"
+help_resetleaderboard: "/1vs5 resetleaderboard"
+help_points: "/1vs5 points"
+help_history: "/1vs5 history"
+help_reload: "/1vs5 reload"
+
+# GameManager - Match-Start
+match_cannot_start_no_kit: "Match kann nicht gestartet werden: Kein Kit festgelegt!"
+match_cannot_start_kit_missing: "Match kann nicht gestartet werden: Kit '%s' existiert nicht mehr!"
+match_cannot_start_no_players: "Match kann nicht gestartet werden: Solo oder Angreifer fehlen!"
+
+# GameManager - Regelvorstellung
+rules_header: "--- 1vs5 REGELN ---"
+rules_line1: "1. Der Solo-Spieler kämpft gegen das Team."
+rules_line2: "2. Friendly Fire zwischen Angreifern (Nahkampf, Projektile & Explosionen) ist deaktiviert."
+rules_line3: "3. Punkte: Solo-Kill eines Angreifers (+1 Pkt), Überleben als Angreifer (+5 Pkt), Angreifer tötet Solo (+10 Pkt), Solo gewinnt Runde (+7 Pkt)."
+rules_footer: "Viel Erfolg!"
+
+# GameManager - Rundenablauf
+round_preparing: "Runde %d von %d wird vorbereitet..."
+match_reset_failed: "Fehler beim Zurücksetzen der Arena!"
+countdown_tick: "Start in %d..."
+match_start: "GO!"
+round_solo_died: "Der Solo-Spieler ist tot! Runde beendet."
+round_attacker_killed_solo: "%s hat den Solo-Spieler eliminiert! (+10 Pkt)"
+round_attacker_killed_solo_unknown: "Ein Angreifer hat den Solo-Spieler eliminiert! (+10 Pkt)"
+round_all_attackers_dead: "Alle Angreifer sind tot! Der Solo-Spieler gewinnt die Runde! (+7 Pkt)"
+solo_kill_attacker: "Gegner eliminiert! (+1 Punkt)"
+attacker_death_points: "Du erhältst %d Punkt(e)."
+
+# GameManager - Spieler verlässt
+quit_solo: "Der Solo-Spieler hat das Spiel verlassen! Runde beendet."
+quit_attackers_all_gone: "Alle Angreifer sind weg! Der Solo-Spieler gewinnt die Runde!"
+
+# GameManager - Match-Ende
+match_over: "Das Match ist beendet!"
+match_stopped: "Match wurde abgebrochen."
+
+# GameManager - Spectate
+spectate_fightworld_not_loaded: "Die Fightworld ist aktuell nicht geladen!"
+spectate_success: "Du schaust dem Kampf nun zu (Teleport zum Solo-Spieler)."
+
+# PointManager
+leaderboard_empty: "Das Leaderboard ist leer."
+leaderboard_header: "--- AKTUELLES LEADERBOARD ---"
+leaderboard_entry: "%d. %s: %d Punkte"
+history_none: "Keine Historie vorhanden."
+history_no_matches: "Keine Matches in der Historie."
+history_header: "--- SPIEL-HISTORIE ---"

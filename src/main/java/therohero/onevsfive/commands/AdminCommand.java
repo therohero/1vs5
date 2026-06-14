@@ -1,6 +1,7 @@
 package therohero.onevsfive.commands;
 
 import therohero.onevsfive.managers.GameManager;
+import therohero.onevsfive.managers.LangManager;
 import therohero.onevsfive.managers.PointManager;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -23,18 +24,21 @@ public class AdminCommand implements CommandExecutor, TabCompleter {
     private final GameManager gameManager;
     private final PointManager pointManager;
     private final org.bukkit.plugin.Plugin plugin;
+    private final LangManager lang;
 
-    public AdminCommand(org.bukkit.plugin.Plugin plugin, GameManager gameManager, PointManager pointManager) {
+    public AdminCommand(org.bukkit.plugin.Plugin plugin, GameManager gameManager, PointManager pointManager,
+            LangManager lang) {
         this.plugin = plugin;
         this.gameManager = gameManager;
         this.pointManager = pointManager;
+        this.lang = lang;
     }
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label,
             @NotNull String[] args) {
         if (!sender.isOp()) {
-            sender.sendMessage(Component.text("Keine Berechtigung!", NamedTextColor.RED));
+            sender.sendMessage(Component.text(lang.get("no_permission"), NamedTextColor.RED));
             return true;
         }
 
@@ -50,7 +54,7 @@ public class AdminCommand implements CommandExecutor, TabCompleter {
                 Player solo = Bukkit.getPlayer(args[1]);
                 if (solo != null) {
                     gameManager.setSoloPlayer(solo.getUniqueId());
-                    sender.sendMessage(Component.text(solo.getName() + " ist Solo.", NamedTextColor.GREEN));
+                    sender.sendMessage(Component.text(lang.get("cmd_set_solo", solo.getName()), NamedTextColor.GREEN));
                 }
                 break;
             case "addattacker":
@@ -59,7 +63,8 @@ public class AdminCommand implements CommandExecutor, TabCompleter {
                 Player att = Bukkit.getPlayer(args[1]);
                 if (att != null) {
                     gameManager.addAttacker(att.getUniqueId());
-                    sender.sendMessage(Component.text(att.getName() + " ist Angreifer.", NamedTextColor.GREEN));
+                    sender.sendMessage(
+                            Component.text(lang.get("cmd_add_attacker", att.getName()), NamedTextColor.GREEN));
                 }
                 break;
             case "removeattacker":
@@ -68,7 +73,8 @@ public class AdminCommand implements CommandExecutor, TabCompleter {
                 Player rem = Bukkit.getPlayer(args[1]);
                 if (rem != null) {
                     gameManager.removeAttacker(rem.getUniqueId());
-                    sender.sendMessage(Component.text(rem.getName() + " entfernt.", NamedTextColor.YELLOW));
+                    sender.sendMessage(
+                            Component.text(lang.get("cmd_remove_attacker", rem.getName()), NamedTextColor.YELLOW));
                 }
                 break;
             case "rounds":
@@ -77,14 +83,14 @@ public class AdminCommand implements CommandExecutor, TabCompleter {
                 try {
                     int r = Integer.parseInt(args[1]);
                     gameManager.setTotalRounds(r);
-                    sender.sendMessage(Component.text("Runden auf " + r + " gesetzt.", NamedTextColor.GREEN));
+                    sender.sendMessage(Component.text(lang.get("cmd_set_rounds", r), NamedTextColor.GREEN));
                 } catch (NumberFormatException e) {
-                    sender.sendMessage(Component.text("Ungültige Zahl!", NamedTextColor.RED));
+                    sender.sendMessage(Component.text(lang.get("cmd_invalid_number"), NamedTextColor.RED));
                 }
                 break;
             case "savekit":
                 if (!(sender instanceof Player player)) {
-                    sender.sendMessage(Component.text("Nur Spieler können Kits speichern!", NamedTextColor.RED));
+                    sender.sendMessage(Component.text(lang.get("cmd_players_only_kit"), NamedTextColor.RED));
                     return true;
                 }
                 if (args.length < 2)
@@ -92,12 +98,12 @@ public class AdminCommand implements CommandExecutor, TabCompleter {
                 try {
                     boolean naturalRegen = args.length >= 3 && args[2].equalsIgnoreCase("regen");
                     gameManager.getKitManager().saveKit(args[1], player, naturalRegen);
-                    sender.sendMessage(Component.text(
-                            "Kit '" + args[1] + "' gespeichert" + (naturalRegen ? " (natürliche Regeneration: AN)" : "")
-                                    + ".",
-                            NamedTextColor.GREEN));
+                    String msg = naturalRegen
+                            ? lang.get("cmd_kit_saved_regen", args[1])
+                            : lang.get("cmd_kit_saved", args[1]);
+                    sender.sendMessage(Component.text(msg, NamedTextColor.GREEN));
                 } catch (Exception e) {
-                    sender.sendMessage(Component.text("Fehler beim Speichern des Kits!", NamedTextColor.RED));
+                    sender.sendMessage(Component.text(lang.get("cmd_kit_save_error"), NamedTextColor.RED));
                     e.printStackTrace();
                 }
                 break;
@@ -107,10 +113,9 @@ public class AdminCommand implements CommandExecutor, TabCompleter {
                 String kitName = args[1];
                 if (gameManager.getKitManager().kitExists(kitName)) {
                     gameManager.setSelectedKit(kitName);
-                    sender.sendMessage(
-                            Component.text("Kit für das Match auf '" + kitName + "' gesetzt.", NamedTextColor.GREEN));
+                    sender.sendMessage(Component.text(lang.get("cmd_kit_set", kitName), NamedTextColor.GREEN));
                 } else {
-                    sender.sendMessage(Component.text("Kit '" + kitName + "' existiert nicht!", NamedTextColor.RED));
+                    sender.sendMessage(Component.text(lang.get("cmd_kit_not_found", kitName), NamedTextColor.RED));
                 }
                 break;
             case "deletekit":
@@ -121,16 +126,17 @@ public class AdminCommand implements CommandExecutor, TabCompleter {
                     if (delKit.equals(gameManager.getSelectedKit())) {
                         gameManager.setSelectedKit(null);
                     }
-                    sender.sendMessage(Component.text("Kit '" + delKit + "' wurde gelöscht.", NamedTextColor.GREEN));
+                    sender.sendMessage(Component.text(lang.get("cmd_kit_deleted", delKit), NamedTextColor.GREEN));
                 } else {
                     sender.sendMessage(
-                            Component.text("Kit '" + delKit + "' konnte nicht gefunden werden.", NamedTextColor.RED));
+                            Component.text(lang.get("cmd_kit_delete_not_found", delKit), NamedTextColor.RED));
                 }
                 break;
             case "toggledrops":
                 boolean newState = !gameManager.isDropItems();
                 gameManager.setDropItems(newState);
-                sender.sendMessage(Component.text("Item Drops beim Tod: " + (newState ? "AN" : "AUS"),
+                sender.sendMessage(Component.text(
+                        newState ? lang.get("cmd_drops_on") : lang.get("cmd_drops_off"),
                         newState ? NamedTextColor.GREEN : NamedTextColor.RED));
                 break;
             case "start":
@@ -141,7 +147,7 @@ public class AdminCommand implements CommandExecutor, TabCompleter {
                 break;
             case "resetleaderboard":
                 pointManager.resetPoints();
-                sender.sendMessage(Component.text("Leaderboard zurückgesetzt.", NamedTextColor.GREEN));
+                sender.sendMessage(Component.text(lang.get("cmd_leaderboard_reset"), NamedTextColor.GREEN));
                 break;
             case "points":
                 pointManager.displayLeaderboard();
@@ -151,7 +157,8 @@ public class AdminCommand implements CommandExecutor, TabCompleter {
                 break;
             case "reload":
                 plugin.reloadConfig();
-                sender.sendMessage(Component.text("Konfiguration neu geladen.", NamedTextColor.GREEN));
+                lang.reload();
+                sender.sendMessage(Component.text(lang.get("cmd_config_reloaded"), NamedTextColor.GREEN));
                 break;
             default:
                 sendHelp(sender);
@@ -189,20 +196,20 @@ public class AdminCommand implements CommandExecutor, TabCompleter {
     }
 
     private void sendHelp(CommandSender sender) {
-        sender.sendMessage(Component.text("--- 1vs5 Admin ---", NamedTextColor.GOLD));
-        sender.sendMessage(Component.text("/1vs5 setsolo <Name>", NamedTextColor.YELLOW));
-        sender.sendMessage(Component.text("/1vs5 addattacker <Name>", NamedTextColor.YELLOW));
-        sender.sendMessage(Component.text("/1vs5 removeattacker <Name>", NamedTextColor.YELLOW));
-        sender.sendMessage(Component.text("/1vs5 rounds <Anzahl>", NamedTextColor.YELLOW));
-        sender.sendMessage(Component.text("/1vs5 savekit <Name>", NamedTextColor.YELLOW));
-        sender.sendMessage(Component.text("/1vs5 setkit <Name>", NamedTextColor.YELLOW));
-        sender.sendMessage(Component.text("/1vs5 deletekit <Name>", NamedTextColor.YELLOW));
-        sender.sendMessage(Component.text("/1vs5 toggledrops", NamedTextColor.YELLOW));
-        sender.sendMessage(Component.text("/1vs5 start", NamedTextColor.YELLOW));
-        sender.sendMessage(Component.text("/1vs5 stop", NamedTextColor.YELLOW));
-        sender.sendMessage(Component.text("/1vs5 resetleaderboard", NamedTextColor.YELLOW));
-        sender.sendMessage(Component.text("/1vs5 points", NamedTextColor.YELLOW));
-        sender.sendMessage(Component.text("/1vs5 history", NamedTextColor.YELLOW));
-        sender.sendMessage(Component.text("/1vs5 reload", NamedTextColor.YELLOW));
+        sender.sendMessage(Component.text(lang.get("help_header"), NamedTextColor.GOLD));
+        sender.sendMessage(Component.text(lang.get("help_setsolo"), NamedTextColor.YELLOW));
+        sender.sendMessage(Component.text(lang.get("help_addattacker"), NamedTextColor.YELLOW));
+        sender.sendMessage(Component.text(lang.get("help_removeattacker"), NamedTextColor.YELLOW));
+        sender.sendMessage(Component.text(lang.get("help_rounds"), NamedTextColor.YELLOW));
+        sender.sendMessage(Component.text(lang.get("help_savekit"), NamedTextColor.YELLOW));
+        sender.sendMessage(Component.text(lang.get("help_setkit"), NamedTextColor.YELLOW));
+        sender.sendMessage(Component.text(lang.get("help_deletekit"), NamedTextColor.YELLOW));
+        sender.sendMessage(Component.text(lang.get("help_toggledrops"), NamedTextColor.YELLOW));
+        sender.sendMessage(Component.text(lang.get("help_start"), NamedTextColor.YELLOW));
+        sender.sendMessage(Component.text(lang.get("help_stop"), NamedTextColor.YELLOW));
+        sender.sendMessage(Component.text(lang.get("help_resetleaderboard"), NamedTextColor.YELLOW));
+        sender.sendMessage(Component.text(lang.get("help_points"), NamedTextColor.YELLOW));
+        sender.sendMessage(Component.text(lang.get("help_history"), NamedTextColor.YELLOW));
+        sender.sendMessage(Component.text(lang.get("help_reload"), NamedTextColor.YELLOW));
     }
 }

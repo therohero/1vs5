@@ -1,5 +1,7 @@
 # 1vs5 Configuration
 
+language: "de"
+
 lobby:
   world: "lobby"
   spawn:

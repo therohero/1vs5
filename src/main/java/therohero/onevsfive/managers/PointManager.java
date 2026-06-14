@@ -17,9 +17,11 @@ import java.util.stream.Collectors;
 public class PointManager {
     private final Map<UUID, Integer> points = new HashMap<>();
     private final File historyFile;
+    private final LangManager lang;
 
-    public PointManager(Plugin plugin) {
+    public PointManager(Plugin plugin, LangManager lang) {
         this.historyFile = new File(plugin.getDataFolder(), "history.yml");
+        this.lang = lang;
     }
 
     public void addPoints(UUID uuid, int amount) {
@@ -61,7 +63,7 @@ public class PointManager {
 
     public void displayLeaderboard() {
         if (points.isEmpty()) {
-            Bukkit.broadcast(Component.text("Das Leaderboard ist leer.", NamedTextColor.YELLOW));
+            Bukkit.broadcast(Component.text(lang.get("leaderboard_empty"), NamedTextColor.YELLOW));
             return;
         }
 
@@ -69,7 +71,7 @@ public class PointManager {
                 .sorted(Map.Entry.<UUID, Integer>comparingByValue().reversed())
                 .collect(Collectors.toList());
 
-        Component header = Component.text("--- CURRENT LEADERBOARD ---", NamedTextColor.GOLD, TextDecoration.BOLD);
+        Component header = Component.text(lang.get("leaderboard_header"), NamedTextColor.GOLD, TextDecoration.BOLD);
         Bukkit.broadcast(header);
 
         for (int i = 0; i < sortedPoints.size(); i++) {
@@ -78,26 +80,23 @@ public class PointManager {
             if (name == null)
                 name = "Unknown";
 
-            Component rank = Component.text((i + 1) + ". ", NamedTextColor.GRAY);
-            Component playerName = Component.text(name, NamedTextColor.WHITE);
-            Component score = Component.text(": " + entry.getValue() + " Punkte", NamedTextColor.YELLOW);
-
-            Bukkit.broadcast(rank.append(playerName).append(score));
+            String line = lang.get("leaderboard_entry", i + 1, name, entry.getValue());
+            Bukkit.broadcast(Component.text(line, NamedTextColor.YELLOW));
         }
     }
 
     public void showHistory(org.bukkit.command.CommandSender sender) {
         if (!historyFile.exists()) {
-            sender.sendMessage(Component.text("Keine Historie vorhanden.", NamedTextColor.RED));
+            sender.sendMessage(Component.text(lang.get("history_none"), NamedTextColor.RED));
             return;
         }
         YamlConfiguration config = YamlConfiguration.loadConfiguration(historyFile);
         if (!config.contains("matches")) {
-            sender.sendMessage(Component.text("Keine Matches in der Historie.", NamedTextColor.RED));
+            sender.sendMessage(Component.text(lang.get("history_no_matches"), NamedTextColor.RED));
             return;
         }
 
-        sender.sendMessage(Component.text("--- SPIEL-HISTORIE ---", NamedTextColor.GOLD, TextDecoration.BOLD));
+        sender.sendMessage(Component.text(lang.get("history_header"), NamedTextColor.GOLD, TextDecoration.BOLD));
         for (String key : config.getConfigurationSection("matches").getKeys(false)) {
             String timestamp = key.replace("-", ":");
             String info = config.getString("matches." + key + ".info");

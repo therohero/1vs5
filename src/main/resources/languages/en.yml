@@ -1,0 +1,94 @@
+# 1vs5 Language File - English
+
+# General
+no_permission: "You don't have permission!"
+players_only: "Only players can use this command!"
+
+# SpectateCommand
+spectate_not_allowed: "You cannot spectate while actively participating in the fight!"
+
+# LobbyListener
+combat_log_message: "You left during a fight (Combat-Log)!"
+match_already_running: "A match is already running. Please wait in the lobby!"
+join_message_running: " has joined. They are waiting in the lobby since a match is already running."
+join_message_normal: " has joined the lobby."
+
+# AdminCommand
+cmd_set_solo: "%s is now the solo player."
+cmd_add_attacker: "%s has been added as an attacker."
+cmd_remove_attacker: "%s has been removed as an attacker."
+cmd_set_rounds: "Round count set to %d."
+cmd_invalid_number: "Invalid number!"
+cmd_players_only_kit: "Only players can save kits!"
+cmd_kit_saved: "Kit '%s' saved."
+cmd_kit_saved_regen: "Kit '%s' saved (natural regeneration: ON)."
+cmd_kit_save_error: "Error saving the kit!"
+cmd_kit_set: "Kit '%s' will be used for the next match."
+cmd_kit_not_found: "Kit '%s' does not exist!"
+cmd_kit_deleted: "Kit '%s' has been deleted."
+cmd_kit_delete_not_found: "Kit '%s' could not be found."
+cmd_drops_on: "Item drops on death: ON"
+cmd_drops_off: "Item drops on death: OFF"
+cmd_leaderboard_reset: "Leaderboard has been reset."
+cmd_config_reloaded: "Configuration reloaded."
+
+# AdminCommand Help
+help_header: "--- 1vs5 Admin Help ---"
+help_setsolo: "/1vs5 setsolo <name>"
+help_addattacker: "/1vs5 addattacker <name>"
+help_removeattacker: "/1vs5 removeattacker <name>"
+help_rounds: "/1vs5 rounds <count>"
+help_savekit: "/1vs5 savekit <name> [regen]"
+help_setkit: "/1vs5 setkit <name>"
+help_deletekit: "/1vs5 deletekit <name>"
+help_toggledrops: "/1vs5 toggledrops"
+help_start: "/1vs5 start"
+help_stop: "/1vs5 stop"
+help_resetleaderboard: "/1vs5 resetleaderboard"
+help_points: "/1vs5 points"
+help_history: "/1vs5 history"
+help_reload: "/1vs5 reload"
+
+# GameManager - Match Start
+match_cannot_start_no_kit: "Match cannot be started: No kit selected!"
+match_cannot_start_kit_missing: "Match cannot be started: Kit '%s' no longer exists!"
+match_cannot_start_no_players: "Match cannot be started: Solo player or attackers are missing!"
+
+# GameManager - Rules introduction
+rules_header: "--- 1vs5 RULES ---"
+rules_line1: "1. The solo player fights against the team."
+rules_line2: "2. Friendly fire between attackers (melee, projectiles & explosions) is disabled."
+rules_line3: "3. Points: Solo kills an attacker (+1 pt), surviving attackers (+5 pt), attacker kills solo (+10 pt), solo wins round (+7 pt)."
+rules_footer: "Good luck!"
+
+# GameManager - Round flow
+round_preparing: "Round %d of %d is being prepared..."
+match_reset_failed: "Failed to reset the arena!"
+countdown_tick: "Starting in %d..."
+match_start: "GO!"
+round_solo_died: "The solo player is dead! Round over."
+round_attacker_killed_solo: "%s eliminated the solo player! (+10 pts)"
+round_attacker_killed_solo_unknown: "An attacker eliminated the solo player! (+10 pts)"
+round_all_attackers_dead: "All attackers are dead! The solo player wins the round! (+7 pts)"
+solo_kill_attacker: "Enemy eliminated! (+1 point)"
+attacker_death_points: "You receive %d point(s)."
+
+# GameManager - Player quit
+quit_solo: "The solo player left the game! Round over."
+quit_attackers_all_gone: "All attackers left! The solo player wins the round!"
+
+# GameManager - Match end
+match_over: "The match is over!"
+match_stopped: "Match has been aborted."
+
+# GameManager - Spectate
+spectate_fightworld_not_loaded: "The fight world is currently not loaded!"
+spectate_success: "You are now spectating the fight (teleported to solo player)."
+
+# PointManager
+leaderboard_empty: "The leaderboard is empty."
+leaderboard_header: "--- CURRENT LEADERBOARD ---"
+leaderboard_entry: "%d. %s: %d points"
+history_none: "No history available."
+history_no_matches: "No matches in history."
+history_header: "--- MATCH HISTORY ---"

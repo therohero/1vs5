@@ -1,6 +1,7 @@
 package therohero.onevsfive.listeners;
 
 import therohero.onevsfive.managers.GameManager;
+import therohero.onevsfive.managers.LangManager;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.GameMode;
@@ -19,10 +20,12 @@ import org.bukkit.plugin.Plugin;
 public class LobbyListener implements Listener {
     private final Plugin plugin;
     private final GameManager gameManager;
+    private final LangManager lang;
 
-    public LobbyListener(Plugin plugin, GameManager gameManager) {
+    public LobbyListener(Plugin plugin, GameManager gameManager, LangManager lang) {
         this.plugin = plugin;
         this.gameManager = gameManager;
+        this.lang = lang;
     }
 
     private String getLobbyWorldName() {
@@ -82,20 +85,17 @@ public class LobbyListener implements Listener {
 
         if (gameManager.isCombatLogger(player.getUniqueId())) {
             player.getInventory().clear();
-            player.sendMessage(Component.text("Du hast während eines Kampfes das Spiel verlassen (Combat-Log)!",
-                    NamedTextColor.RED));
+            player.sendMessage(Component.text(lang.get("combat_log_message"), NamedTextColor.RED));
             gameManager.removeCombatLogger(player.getUniqueId());
         }
 
         if (gameManager.isGameRunning() || gameManager.isCountingDown()) {
-            event.getPlayer().sendMessage(
-                    Component.text("Es läuft bereits ein Match. Bitte warte in der Lobby!", NamedTextColor.GOLD));
+            event.getPlayer().sendMessage(Component.text(lang.get("match_already_running"), NamedTextColor.GOLD));
             event.joinMessage(Component.text(event.getPlayer().getName(), NamedTextColor.YELLOW)
-                    .append(Component.text(" ist beigetreten. Er wartet in der Lobby, da bereits ein Match läuft.",
-                            NamedTextColor.GRAY)));
+                    .append(Component.text(lang.get("join_message_running"), NamedTextColor.GRAY)));
         } else {
             event.joinMessage(Component.text(event.getPlayer().getName(), NamedTextColor.GREEN)
-                    .append(Component.text(" ist der Lobby beigetreten.", NamedTextColor.GRAY)));
+                    .append(Component.text(lang.get("join_message_normal"), NamedTextColor.GRAY)));
         }
     }
 
