@@ -106,11 +106,14 @@ Teleportiert dich in die Kampfwelt im Zuschauermodus. Kann von aktiven Teilnehme
 
 ---
 
-## Kit-System
+## Kit System
 
-Kits speichern das Inventar (Items, Rüstung, Nebenhand) des Spielers, der `savekit` ausführt. Nach dem namen kann man optional true oder false angeben um natürliche gesundheitsregeneration an oder aus zu schalten. Standardmäßig ist es an.
+Kits speichern das Inventar (Items, Rüstung, Nebenhand) des Spielers, der `/1vs5 savekit <name> [true/false]` ausführt. 
+Nach dem Namen des Kits können optional `true` oder `false` angegeben werden, um die natürliche Gesundheitsregeneration zu aktivieren oder zu deaktivieren. Standardmäßig ist sie aktiviert.
 
 Kits werden unter `plugins/1vs5/kits/<Name>.yml` gespeichert.
+
+Das bedeutet, dass Kits einfach zwischen Servern übertragen werden können, indem man die `.yml`-Dateien kopiert.
 
 ---
 

@@ -1,0 +1,74 @@
+inventory:
+- ==: org.bukkit.inventory.ItemStack
+  DataVersion: 4671
+  id: minecraft:diamond_sword
+  count: 1
+  schema_version: 1
+- null
+- null
+- null
+- null
+- null
+- null
+- null
+- null
+- null
+- null
+- null
+- null
+- null
+- null
+- null
+- null
+- null
+- null
+- null
+- null
+- null
+- null
+- null
+- null
+- null
+- null
+- null
+- null
+- null
+- null
+- null
+- null
+- null
+- null
+- null
+armor:
+- ==: org.bukkit.inventory.ItemStack
+  DataVersion: 4671
+  id: minecraft:diamond_boots
+  count: 1
+  components:
+    minecraft:enchantments: '{"minecraft:protection":3,"minecraft:unbreaking":3}'
+  schema_version: 1
+- ==: org.bukkit.inventory.ItemStack
+  DataVersion: 4671
+  id: minecraft:diamond_leggings
+  count: 1
+  components:
+    minecraft:enchantments: '{"minecraft:protection":3,"minecraft:unbreaking":3}'
+  schema_version: 1
+- ==: org.bukkit.inventory.ItemStack
+  DataVersion: 4671
+  id: minecraft:diamond_chestplate
+  count: 1
+  components:
+    minecraft:enchantments: '{"minecraft:protection":3,"minecraft:unbreaking":3}'
+  schema_version: 1
+- ==: org.bukkit.inventory.ItemStack
+  DataVersion: 4671
+  id: minecraft:diamond_helmet
+  count: 1
+  components:
+    minecraft:enchantments: '{"minecraft:protection":3,"minecraft:unbreaking":3}'
+  schema_version: 1
+offhand:
+- null
+- null
+- null

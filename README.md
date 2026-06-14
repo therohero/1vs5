@@ -110,9 +110,12 @@ Teleports you to the fight world in spectator mode. Cannot be used by active par
 
 ## Kit System
 
-Kits save the inventory (items, armor, offhand) of the player who runs `savekit`. After the name of the kit you can optionally specify true or false to enable or disable natural health regeneration. By default it is enabled.
+Kits save the inventory (items, armor, offhand) of the player who runs `/1vs5 savekit <name> [true/false]`. 
+After the name of the kit, you can optionally specify `true` or `false` to enable or disable natural health regeneration. By default, it is enabled.
 
 Kits are stored in `plugins/1vs5/kits/<name>.yml`.
+
+This means you can easily transfer kits between servers by copying the `.yml` files.
 
 ---
 
