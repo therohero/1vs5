@@ -20,7 +20,7 @@ public class LangManager {
     }
 
     public void reload() {
-        String language = plugin.getConfig().getString("language", "de");
+        String language = plugin.getConfig().getString("language", "en");
         String fileName = language + ".yml";
 
         // Save default language file if it doesn't exist yet
