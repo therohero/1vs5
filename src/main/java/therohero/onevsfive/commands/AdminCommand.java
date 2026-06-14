@@ -96,11 +96,21 @@ public class AdminCommand implements CommandExecutor, TabCompleter {
                 if (args.length < 2)
                     return false;
                 try {
-                    boolean naturalRegen = args.length >= 3 && args[2].equalsIgnoreCase("regen");
+                    // Standardmäßig true, außer das 3. Argument ist explizit "false"
+                    boolean naturalRegen = true;
+                    if (args.length >= 3) {
+                        if (args[2].equalsIgnoreCase("false")) {
+                            naturalRegen = false;
+                        }
+                    }
+
                     gameManager.getKitManager().saveKit(args[1], player, naturalRegen);
+
+                    // Nachricht anpassen (Du kannst deine Sprachdateien entsprechend erweitern)
                     String msg = naturalRegen
-                            ? lang.get("cmd_kit_saved_regen", args[1])
-                            : lang.get("cmd_kit_saved", args[1]);
+                            ? lang.get("cmd_kit_saved_regen", args[1]) // oder cmd_kit_saved
+                            : lang.get("cmd_kit_saved_no_regen", args[1]);
+
                     sender.sendMessage(Component.text(msg, NamedTextColor.GREEN));
                 } catch (Exception e) {
                     sender.sendMessage(Component.text(lang.get("cmd_kit_save_error"), NamedTextColor.RED));
