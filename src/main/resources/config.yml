@@ -1,6 +1,6 @@
 # 1vs5 Configuration
 
-language: "de"
+language: "en"
 
 lobby:
   world: "lobby"
