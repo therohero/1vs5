@@ -128,6 +128,21 @@ public class AdminCommand implements CommandExecutor, TabCompleter {
                     sender.sendMessage(Component.text(lang.get("cmd_kit_not_found", kitName), NamedTextColor.RED));
                 }
                 break;
+            case "givekit":
+                if (!(sender instanceof Player player)) {
+                    sender.sendMessage(Component.text(lang.get("players_only"), NamedTextColor.RED));
+                    return true;
+                }
+                if (args.length < 2)
+                    return false;
+                String giveKitName = args[1];
+                if (gameManager.getKitManager().kitExists(giveKitName)) {
+                    gameManager.getKitManager().loadKit(giveKitName, player, false);
+                    sender.sendMessage(Component.text(lang.get("cmd_kit_given", giveKitName), NamedTextColor.GREEN));
+                } else {
+                    sender.sendMessage(Component.text(lang.get("cmd_kit_not_found", giveKitName), NamedTextColor.RED));
+                }
+                break;
             case "deletekit":
                 if (args.length < 2)
                     return false;
@@ -184,7 +199,8 @@ public class AdminCommand implements CommandExecutor, TabCompleter {
         List<String> completions = new ArrayList<>();
         if (args.length == 1) {
             List<String> subCommands = Arrays.asList("setsolo", "addattacker", "removeattacker", "rounds",
-                    "savekit", "setkit", "deletekit", "toggledrops", "start", "stop", "resetleaderboard", "points",
+                    "savekit", "setkit", "givekit", "deletekit", "toggledrops", "start", "stop", "resetleaderboard",
+                    "points",
                     "history", "reload");
             StringUtil.copyPartialMatches(args[0], subCommands, completions);
         } else if (args.length == 2) {
@@ -195,7 +211,7 @@ public class AdminCommand implements CommandExecutor, TabCompleter {
                     players.add(p.getName());
                 }
                 StringUtil.copyPartialMatches(args[1], players, completions);
-            } else if (sub.equals("setkit") || sub.equals("deletekit")) {
+            } else if (sub.equals("setkit") || sub.equals("deletekit") || sub.equals("givekit")) {
                 StringUtil.copyPartialMatches(args[1], gameManager.getKitManager().getKitNames(), completions);
             }
         } else if (args.length == 3 && args[0].equalsIgnoreCase("savekit")) {
@@ -213,6 +229,7 @@ public class AdminCommand implements CommandExecutor, TabCompleter {
         sender.sendMessage(Component.text(lang.get("help_rounds"), NamedTextColor.YELLOW));
         sender.sendMessage(Component.text(lang.get("help_savekit"), NamedTextColor.YELLOW));
         sender.sendMessage(Component.text(lang.get("help_setkit"), NamedTextColor.YELLOW));
+        sender.sendMessage(Component.text(lang.get("help_givekit"), NamedTextColor.YELLOW));
         sender.sendMessage(Component.text(lang.get("help_deletekit"), NamedTextColor.YELLOW));
         sender.sendMessage(Component.text(lang.get("help_toggledrops"), NamedTextColor.YELLOW));
         sender.sendMessage(Component.text(lang.get("help_start"), NamedTextColor.YELLOW));

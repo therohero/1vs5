@@ -81,6 +81,7 @@ All admin commands require operator permissions (`/op`).
 | `rounds <number>` | Set the number of rounds |
 | `savekit <name> [true|false]` | Save your current inventory as a kit; `true` enables natural health regeneration, `false` disables it (default: true) |
 | `setkit <name>` | Select a kit for the next match |
+| `givekit <name>` | Give yourself the items of a specific kit without starting a match |
 | `deletekit <name>` | Delete a saved kit |
 | `toggledrops` | Toggle whether players drop items on death |
 | `start` | Start the match |

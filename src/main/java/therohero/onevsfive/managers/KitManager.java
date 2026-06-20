@@ -48,6 +48,10 @@ public class KitManager {
     }
 
     public void loadKit(String name, Player player) {
+        loadKit(name, player, true);
+    }
+
+    public void loadKit(String name, Player player, boolean updateGameRule) {
         File file = new File(kitFolder, name + ".yml");
         if (!file.exists())
             return;
@@ -65,17 +69,19 @@ public class KitManager {
         player.getInventory().setArmorContents(armor);
         player.getInventory().setExtraContents(offhand);
 
-        // Set naturalRegeneration gamerule on der fightworld basierend auf
-        // Kit-Einstellung
-        // Standard: AN — nur geschrieben wenn AUS
-        boolean naturalRegen = config.getBoolean("natural_regeneration", true);
-        org.bukkit.World world = player.getWorld();
-        String value = naturalRegen ? "true" : "false";
-        // Use string API to bypass Java enum deprecation issues (works on all Paper
-        // 1.21 builds)
-        if (!world.setGameRuleValue("minecraft:natural_health_regeneration", value)) {
-            // Fallback for older builds that still use the old name
-            world.setGameRuleValue("naturalRegeneration", value);
+        if (updateGameRule) {
+            // Set naturalRegeneration gamerule on der fightworld basierend auf
+            // Kit-Einstellung
+            // Standard: AN — nur geschrieben wenn AUS
+            boolean naturalRegen = config.getBoolean("natural_regeneration", true);
+            org.bukkit.World world = player.getWorld();
+            String value = naturalRegen ? "true" : "false";
+            // Use string API to bypass Java enum deprecation issues (works on all Paper
+            // 1.21 builds)
+            if (!world.setGameRuleValue("minecraft:natural_health_regeneration", value)) {
+                // Fallback for older builds that still use the old name
+                world.setGameRuleValue("naturalRegeneration", value);
+            }
         }
     }
 

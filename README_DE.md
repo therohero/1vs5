@@ -79,6 +79,7 @@ Alle Admin-Befehle erfordern Operator-Rechte (`/op`).
 | `rounds <Anzahl>` | Rundenanzahl festlegen |
 | `savekit <Name> [true|false]` | Aktuelles Inventar als Kit speichern; `true` aktiviert natürliche Gesundheitsregeneration, `false` deaktiviert sie (Standard: true) |
 | `setkit <Name>` | Kit für das nächste Match auswählen |
+| `givekit <Name>` | Erhalte die Items eines spezifischen Kits, ohne ein Match zu starten |
 | `deletekit <Name>` | Gespeichertes Kit löschen |
 | `toggledrops` | Item-Drops beim Tod an- oder ausschalten |
 | `start` | Match starten |
